@@ -49,6 +49,11 @@ var tfModelResourceMap = &tfModelConverterHelper.BlockToStruct{
 							OSArchKey:  tfModelConverterHelper.BuildDefaultModelPath("spec", "topology", nodePoolsArrayField, "spec", "osImage", "arch"),
 							VersionKey: tfModelConverterHelper.BuildDefaultModelPath("spec", "topology", nodePoolsArrayField, "spec", "osImage", "version"),
 						},
+						AutoscalingKey: &tfModelConverterHelper.BlockToStruct{
+							AutoscalingEnabledKey:  tfModelConverterHelper.BuildDefaultModelPath("spec", "topology", nodePoolsArrayField, "spec", "autoScaling", "enabled"),
+							AutoscalingMinCountKey: tfModelConverterHelper.BuildDefaultModelPath("spec", "topology", nodePoolsArrayField, "spec", "autoScaling", "minCount"),
+							AutoscalingMaxCountKey: tfModelConverterHelper.BuildDefaultModelPath("spec", "topology", nodePoolsArrayField, "spec", "autoScaling", "maxCount"),
+						},
 						OverridesKey: &tfModelConverterHelper.EvaluatedField{
 							Field:    tfModelConverterHelper.BuildDefaultModelPath("spec", "topology", nodePoolsArrayField, "spec", tfModelConverterHelper.BuildArrayField("overrides")),
 							EvalFunc: tfModelConverterHelper.EvaluationFunc(evaluateClusterVariables),

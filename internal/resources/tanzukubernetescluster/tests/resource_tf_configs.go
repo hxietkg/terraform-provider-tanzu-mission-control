@@ -50,6 +50,12 @@ func InitResourceTFConfigBuilder() *ResourceTFConfigBuilder {
 				version = "%s"
 				arch    = "%s"
 			  }
+
+			  auto_scaling {
+				enabled = %s
+				min_count = 2
+				max_count = 4
+			  }
 			}
 		  }
 		`,
@@ -59,7 +65,7 @@ func InitResourceTFConfigBuilder() *ResourceTFConfigBuilder {
 }
 
 func (builder *ResourceTFConfigBuilder) GetTKGMClusterConfig(tkgmEnvVars map[ClusterEnvVar]string, nodePoolsNum int) string {
-	nodePools := builder.BuildNodePools(tkgmEnvVars[TKGMWorkerClassEnv], tkgmEnvVars[TKGMNodePoolOverridesEnv],
+	nodePools := builder.BuildNodePools(tkgmEnvVars[TKGMWorkerClassEnv], tkgmEnvVars[TKGMNodePoolOverridesEnv], "",
 		tkgmEnvVars[TKGMOSImageNameEnv], tkgmEnvVars[TKGMOSImageVersionEnv], tkgmEnvVars[TKGMOSImageArchEnv],
 		nodePoolsNum)
 
@@ -140,7 +146,8 @@ func (builder *ResourceTFConfigBuilder) GetTKGMClusterConfig(tkgmEnvVars map[Clu
 
 func (builder *ResourceTFConfigBuilder) GetTKGSClusterConfig(tkgsEnvVars map[ClusterEnvVar]string, nodePoolsNum int) string {
 	nodePools := builder.BuildNodePools(tkgsEnvVars[TKGSWorkerClassEnv], tkgsEnvVars[TKGSNodePoolOverridesEnv],
-		tkgsEnvVars[TKGSOSImageNameEnv], tkgsEnvVars[TKGSOSImageVersionEnv], tkgsEnvVars[TKGSOSImageArchEnv],
+		tkgsEnvVars[TKGSNodePoolAutoScalingEnv], tkgsEnvVars[TKGSOSImageNameEnv],
+		tkgsEnvVars[TKGSOSImageVersionEnv], tkgsEnvVars[TKGSOSImageArchEnv],
 		nodePoolsNum)
 
 	return fmt.Sprintf(`
@@ -203,12 +210,16 @@ func (builder *ResourceTFConfigBuilder) GetTKGSClusterConfig(tkgsEnvVars map[Clu
 	)
 }
 
-func (builder *ResourceTFConfigBuilder) BuildNodePools(workerClass string, overrides string, osImageName string,
+func (builder *ResourceTFConfigBuilder) BuildNodePools(workerClass string, overrides string, autoscaling string, osImageName string,
 	osImageVersion string, osImageArch string, nodePoolsNum int) string {
 	nodePools := ""
 
+	if autoscaling != "true" {
+		autoscaling = "false"
+	}
+
 	for i := 0; i < nodePoolsNum; i++ {
-		np := fmt.Sprintf(builder.NodePoolDefinition, i, workerClass, overrides, osImageName, osImageVersion, osImageArch)
+		np := fmt.Sprintf(builder.NodePoolDefinition, i, workerClass, overrides, autoscaling, osImageName, osImageVersion, osImageArch)
 		nodePools = fmt.Sprintf("%s\n%s", nodePools, np)
 	}
 

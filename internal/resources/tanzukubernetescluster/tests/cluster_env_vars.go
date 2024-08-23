@@ -38,6 +38,7 @@ const (
 	TKGSOSImageArchEnv           ClusterEnvVar = "TKGS_OS_IMAGE_ARCH"
 	TKGSWorkerClassEnv           ClusterEnvVar = "TKGS_WORKER_CLASS"
 	TKGSNodePoolOverridesEnv     ClusterEnvVar = "TKGS_NODE_POOL_OVERRIDES"
+	TKGSNodePoolAutoScalingEnv   ClusterEnvVar = "TKGS_NODE_POOL_AUTO_SCALING"
 )
 
 const (
@@ -81,7 +82,8 @@ var (
 				TKGSWorkerClassEnv:           true,
 			},
 			OptionalEnvVar: {
-				TKGSNodePoolOverridesEnv: true,
+				TKGSNodePoolOverridesEnv:   true,
+				TKGSNodePoolAutoScalingEnv: true,
 			},
 		},
 	}

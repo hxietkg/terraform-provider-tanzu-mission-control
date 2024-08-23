@@ -15,6 +15,9 @@ import (
 // swagger:model vmware.tanzu.manage.v1alpha1.managementcluster.provisioner.tanzukubernetescluster.nodepool.Spec
 type VmwareTanzuManageV1alpha1ManagementClusterProvisionerTanzukubernetesClusterNodepoolSpec struct {
 
+	// Auto scaling config.
+	AutoScaling *VmwareTanzuManageV1alpha1ManagementclusterProvisionerTanzukubernetesclusterNodepoolAutoScalingConfig `json:"autoScaling,omitempty"`
+
 	// The name of the machine deployment class used to create the nodepool.
 	Class string `json:"class,omitempty"`
 

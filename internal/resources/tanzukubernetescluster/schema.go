@@ -58,6 +58,7 @@ const (
 	WorkerClassKey   = "worker_class"
 	FailureDomainKey = "failure_domain"
 	OverridesKey     = "overrides"
+	AutoscalingKey   = "auto_scaling"
 
 	// Network Directive Keys.
 	PodCIDRBlocksKey     = "pod_cidr_blocks"
@@ -67,6 +68,11 @@ const (
 	// Core Addon Directive Keys.
 	TypeKey     = "type"
 	ProviderKey = "provider"
+
+	// Autoscaling Directive Keys.
+	AutoscalingEnabledKey  = "enabled"
+	AutoscalingMinCountKey = "min_count"
+	AutoscalingMaxCountKey = "max_count"
 
 	// Timeout Policy Default Values.
 	TimeoutDefaultValue           = 60
@@ -319,6 +325,32 @@ var NodePoolSpecSchema = &schema.Schema{
 			},
 			ReplicasKey: ReplicasSchema,
 			OSImageKey:  OSImageSchema,
+			AutoscalingKey: {
+				Type:        schema.TypeList,
+				Description: "Autoscaling config on the node pool",
+				MaxItems:    1,
+				Computed:    true,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						AutoscalingEnabledKey: {
+							Type:        schema.TypeBool,
+							Description: "Enable autoscaling.",
+							Required:    true,
+						},
+						AutoscalingMinCountKey: {
+							Type:        schema.TypeInt,
+							Description: "The minimum number of nodes for autoscaling.",
+							Required:    true,
+						},
+						AutoscalingMaxCountKey: {
+							Type:        schema.TypeInt,
+							Description: "The maximum number of nodes for autoscaling.",
+							Required:    true,
+						},
+					},
+				},
+			},
 			common.MetaKey: {
 				Type:        schema.TypeList,
 				Description: "Metadata for the resource",
